@@ -20,16 +20,20 @@
       <h3>Maximum length: {{maxLength}}</h3>
       <input type="range" min="1" max="1638" value="1" class="custom-range" id="myRange" [(ngModel)]="maxLength">
     </div>
-    <div>
-      <button class="btn btn-primary" (click)="sendQuest()">Send</button>
+    <div class="button-container">
+      <button class="custom-button" (click)="sendQuest()">Send</button>
     </div>
 
   </div>
-  <div class="backChatContainer">
+  <div class="mainChatContainer">
     <div class="chat-container">
       <div *ngFor="let conversation of conversations" class="message">
-        <div *ngIf="conversation.quest" class="quest">{{ conversation.quest }}</div>
-        <div *ngIf="conversation.answer" class="answer">{{ conversation.answer }}</div>
+        <div *ngIf="conversation.quest" class="quest">
+          <p>{{ conversation.quest }}</p>
+        </div>
+        <div *ngIf="conversation.answer" class="answer">
+          <p>{{ conversation.answer }}</p>
+        </div>
       </div>
     </div>
     <div class="infoContainer">
@@ -37,10 +41,8 @@
       <h2>Powered by OpenAi API <br/>Made by Santiago MejIa</h2>
       <p>Version 1.0.0</p>
     </div>
-    <!-- <div class="input-container">
-      <input class="textInput" placeholder="Escribe aquí...">
-    </div> -->
     <div class="input-container">
       <textarea class="textInput" placeholder="Send a message..." [(ngModel)]="inputText"></textarea>
-  </div>
+    </div>
+
 </div>

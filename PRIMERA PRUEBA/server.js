@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from "cors";
 import dotenv from "dotenv";
+import morgan from "morgan";
 
 const app = express();
 const port = 5500;
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(cors());
 dotenv.config();
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 // openai configuration
 
@@ -53,4 +55,20 @@ const generateText = async (req, res) => {
 
 }
 
+
+const prueba = async (req, res) => {
+  const prompt = req.body.prompt;
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "system", content: "Eres un asistente virtual que puede responder cualquier pregunta" },
+    { role: "user", content: prompt }],
+    temperature: 1,
+    max_tokens: 200,
+  });
+  
+  res.json(response.choices[0].message.content);
+
+}
+
 app.post("/openai", generateText);
+app.post("/prueba", prueba);
