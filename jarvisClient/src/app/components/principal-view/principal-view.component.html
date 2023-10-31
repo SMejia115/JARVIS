@@ -1,0 +1,46 @@
+<div class="mainContainer">
+  <div class="settingsContainer">
+    <div class="modelContainer">
+      <h3>Model: {{model}}</h3>
+      <select [(ngModel)]="model">
+        <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        <option value="gpt-3.5-turbo-16k">gpt-3.5-turbo-16k</option>
+        <option value="gpt-3.5-turbo-16k-0613">gpt-3.5-turbo-16k-0613</option>
+        <option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
+        <option value="gpt-3.5-turbo-0613">gpt-3.5-turbo-0613</option>
+      </select>
+    </div>
+    
+    <div class="temperatureContainer">
+      <h3>Temperature: {{temperature}}</h3>
+      <input type="range" min="0" max="1" value="0" step="0.1" class="custom-range" id="myRange" [(ngModel)]="temperature">
+    </div>
+
+    <div class="maximunLengthContainer">
+      <h3>Maximum length: {{maxLength}}</h3>
+      <input type="range" min="1" max="1638" value="1" class="custom-range" id="myRange" [(ngModel)]="maxLength">
+    </div>
+    <div>
+      <button class="btn btn-primary" (click)="sendQuest()">Send</button>
+    </div>
+
+  </div>
+  <div class="backChatContainer">
+    <div class="chat-container">
+      <div *ngFor="let conversation of conversations" class="message">
+        <div *ngIf="conversation.quest" class="quest">{{ conversation.quest }}</div>
+        <div *ngIf="conversation.answer" class="answer">{{ conversation.answer }}</div>
+      </div>
+    </div>
+    <div class="infoContainer">
+      <h2 class="tittleContainer">J A R V I S</h2>
+      <h2>Powered by OpenAi API <br/>Made by Santiago MejIa</h2>
+      <p>Version 1.0.0</p>
+    </div>
+    <!-- <div class="input-container">
+      <input class="textInput" placeholder="Escribe aquí...">
+    </div> -->
+    <div class="input-container">
+      <textarea class="textInput" placeholder="Send a message..." [(ngModel)]="inputText"></textarea>
+  </div>
+</div>
