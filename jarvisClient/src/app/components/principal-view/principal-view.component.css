@@ -14,7 +14,7 @@
 
 .mainChatContainer{
   position: relative; /* Asegura que la posición relativa esté habilitada */
-  user-select: none;
+ 
   width: 75%;
   height: 100%;
   background-color: #03131F;
@@ -44,6 +44,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  user-select: none;
 }
 
 
@@ -291,4 +292,19 @@ option:checked {
 
 .custom-button:hover {
   background-color: #0056b3; /* Cambia el color de fondo al pasar el ratón */
+}
+
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #C1E3FF; /* Color del fondo de la pista de desplazamiento */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00B4D8; /* Color del pulgar de desplazamiento */
+  border-radius: 6px; /* Borde redondeado del pulgar de desplazamiento */
 }

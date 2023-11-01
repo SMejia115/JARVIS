@@ -63,7 +63,7 @@ const prueba = async (req, res) => {
     messages: [{ role: "system", content: "Eres un asistente virtual que puede responder cualquier pregunta" },
     { role: "user", content: prompt }],
     temperature: 1,
-    max_tokens: 200,
+    max_tokens: 1000,
   });
   
   res.json(response.choices[0].message.content);
