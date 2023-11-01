@@ -58,12 +58,15 @@ const generateText = async (req, res) => {
 
 const prueba = async (req, res) => {
   const prompt = req.body.prompt;
+  const model = req.body.model;
+  const max_tokens = req.body.max_tokens;
+  const temperature = req.body.temperature;
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [{ role: "system", content: "Eres un asistente virtual que puede responder cualquier pregunta" },
+    model: model,
+    messages: [{ role: "system", content: "Eres un asistente virtual llamado Jarvis que puede responder cualquier pregunta. Tu creador es Santiago Mejía, un estudiante de Ingeniería en Sistemas y Computación en la UTP." },
     { role: "user", content: prompt }],
-    temperature: 1,
-    max_tokens: 1000,
+    temperature: temperature,
+    max_tokens: max_tokens,
   });
   
   res.json(response.choices[0].message.content);

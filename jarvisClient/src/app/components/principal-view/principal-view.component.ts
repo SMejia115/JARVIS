@@ -18,8 +18,13 @@ export class PrincipalViewComponent {
 
   sendQuest() {
     this.conversations.push({quest: this.inputText});
+    this.conversations.push({answer: "Se está generando la respuesta..."});
     console.log("Entró a la petición");
-    this.http.post('http://localhost:5500/prueba', {prompt: this.inputText}).subscribe((data:any) => {
+    this.http.post('http://localhost:5500/prueba', {prompt: this.inputText, 
+                                                    max_tokens: this.maxLength, 
+                                                    model: this.model, 
+                                                    temperature: this.temperature}).subscribe((data:any) => {
+      this.conversations.pop();
       this.conversations.push({ answer: data})
       console.log(data);
       
