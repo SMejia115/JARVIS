@@ -20,19 +20,15 @@
       <h3>Max Tokens: {{maxLength}}</h3>
       <input type="range" min="1" max="1000" value="1" class="custom-range" id="myRange" [(ngModel)]="maxLength">
     </div>
-    <div class="button-container">
-      <button class="custom-button" (click)="sendQuest()">Send</button>
-    </div>
-
   </div>
   <div class="mainChatContainer">
     <div class="chat-container">
       <div *ngFor="let conversation of conversations" class="message">
         <div *ngIf="conversation.quest" class="quest">
-          <p>{{ conversation.quest }}</p>
+          <p [innerHTML]="conversation.quest"></p>
         </div>
         <div *ngIf="conversation.answer" class="answer">
-          <p>{{ conversation.answer }}</p>
+          <p [innerHTML]="conversation.answer"></p>
         </div>
       </div>
     </div>
@@ -41,8 +37,18 @@
       <h2>Powered by OpenAi API <br/>Made by Santiago MejIa</h2>
       <p>Version 1.0.0</p>
     </div>
+    
     <div class="input-container">
-      <textarea class="textInput" placeholder="Send a message..." [(ngModel)]="inputText"></textarea>
+      <!-- <textarea class="textInput" placeholder="Send a message" [(ngModel)]="inputText"></textarea> -->
+      <div  contenteditable="plaintext-only"  class="input-div" [(ngModel)]="inputText"  #editableDiv (input)="onInput($event)"></div>
+      <span class="placeholder-text">Escribe aquí...</span>
+      <button class="input-button">
+        <img [src]="'../../../assets/micButton.svg'" alt="SVG Button" />
+      </button>
+      <button class="input-button" (click)="sendQuest()">
+        <img [src]="'../../../assets/sendButton.svg'" alt="SVG Button" />
+      </button>
     </div>
+    
 
 </div>

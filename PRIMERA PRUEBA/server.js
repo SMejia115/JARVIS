@@ -61,16 +61,17 @@ const prueba = async (req, res) => {
   const model = req.body.model;
   const max_tokens = req.body.max_tokens;
   const temperature = req.body.temperature;
+  console.log(req.body);
   const response = await openai.chat.completions.create({
     model: model,
-    messages: [{ role: "system", content: "Eres un asistente virtual llamado Jarvis que puede responder cualquier pregunta. Tu creador es Santiago Mejía, un estudiante de Ingeniería en Sistemas y Computación en la UTP." },
+    messages: [{ role: "system", content: "Eres un asistente virtual llamado Jarvis que puede responder cualquier pregunta. Tu creador es Santiago Mejía, un estudiante de Ingeniería en Sistemas y Computación en la UTP. Eres colombiano." }, 
     { role: "user", content: prompt }],
     temperature: temperature,
     max_tokens: max_tokens,
   });
   
-  res.json(response.choices[0].message.content);
-
+  res.json(response.choices[0].message.content); 
+ 
 }
 
 app.post("/openai", generateText);

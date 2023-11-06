@@ -14,7 +14,7 @@
 
 .mainChatContainer{
   position: relative; /* Asegura que la posición relativa esté habilitada */
- 
+  display: flex;
   width: 75%;
   height: 100%;
   background-color: #03131F;
@@ -33,7 +33,6 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  padding: 120px;
   opacity: 0.10; 
   color: #00B4D8; 
   font-family: Koulen; 
@@ -50,7 +49,7 @@
 
 .infoContainer .tittleContainer{
   font-size: 100px;
-  margin: 100px 0 40px 0;
+  margin-bottom: 40px;
 }
 
 
@@ -195,32 +194,6 @@ option:checked {
 
 
 
-.input-container{
-  display: inline-block;
-}
-
-.input-container textarea {
-  z-index: 3;
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
-  border: none;
-  background-color: #C1E3FF;
-  padding: 5px;
-  border-radius: 15px;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
-  color: #000814; 
-  width: 95%;
-  max-width: 95%;
-  max-height: 50px;
-  opacity: 1; 
-  resize: none;
-  height: 25px;
-}
-
-
-
 /*-------------------------------*/
 
 .chat-container{
@@ -231,6 +204,7 @@ option:checked {
   right: 0;
   overflow: auto;
   padding-bottom: 30px;
+  
 }
 
 .quest{
@@ -247,6 +221,8 @@ option:checked {
   align-items: center;
   justify-content: center;
   padding: 5px;
+  max-width: 80%;
+
 }
 
 .quest p{
@@ -265,11 +241,14 @@ option:checked {
   margin: 20px auto 20px 10px;
   padding: 5px;
   max-width: 80%;
-  text-align: start;
+  text-align: left;
+
 }
 
 .answer p{
+  max-width: 100%;
   margin: 10px;
+  white-space: normal;
 }
 
 
@@ -308,3 +287,88 @@ option:checked {
   background: #00B4D8; /* Color del pulgar de desplazamiento */
   border-radius: 6px; /* Borde redondeado del pulgar de desplazamiento */
 }
+
+/*---------------------------------------------------*/
+.input-container{
+  display:flex;
+  position: absolute;
+  width: 95%;
+  border-radius: 10px;
+  background-color: #C1E3FF;
+  margin: 0 auto;
+  bottom: 20px;
+  z-index: 3;
+  max-height: 130px;
+  height:20px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .input-container textarea {
+  z-index: 3;
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  border: none;
+  background-color: #C1E3FF;
+  padding: 5px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  color: #000814; 
+  width: 95%;
+  max-width: 95%;
+  max-height: 80px;
+  opacity: 1; 
+  resize: none;
+  height: auto;
+  justify-content: center;
+  outline: none;
+  scroll-behavior: auto;
+} */
+
+.input-div{
+  width: 94%;
+  height: 100%;
+  background-color: #C1E3FF;
+  text-align: left;
+  outline: none;
+}
+
+
+.placeholder-text {
+  position: absolute;
+  top: 10px;
+  left:10px;
+  color: black;
+  z-index: 3;
+  opacity: 0.5;
+  pointer-events: none;
+
+}
+
+
+.input-button{
+  display: flex;
+  border: none;
+  max-width: 3%;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  max-height: 20px;
+  height: 100%;
+  opacity: 0.5;
+}
+
+.input-button img{
+
+  cursor: pointer;
+}
+
+.input-button:hover{
+  opacity: 1;
+  
+}
+
+
