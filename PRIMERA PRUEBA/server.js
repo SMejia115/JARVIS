@@ -1,7 +1,13 @@
-import express from 'express';
+import express, { text } from 'express';
 import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import fs from "fs";
+import path from "path";
+// openai configuration
+
+import { OpenAI } from "openai";
+
 
 const app = express();
 const port = 5500;
@@ -14,9 +20,6 @@ dotenv.config();
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-// openai configuration
-
-import { OpenAI } from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_KEY
@@ -56,6 +59,7 @@ const generateText = async (req, res) => {
 }
 
 
+
 const prueba = async (req, res) => {
   const prompt = req.body.prompt;
   const model = req.body.model;
@@ -74,5 +78,26 @@ const prueba = async (req, res) => {
  
 }
 
+// text to speech
+
+const speechFile = path.resolve("./speech.mp3");
+
+const textToSpeech = async (req, res) => {
+  const text = req.body.text;
+  console.log(text);
+  const voice = await openai.audio.speech.create({
+    model: "tts-1",
+    voice: "onyx",
+    input: text,
+  });
+  console.log(speechFile);
+  const buffer = Buffer.from(await voice.arrayBuffer());
+  await fs.promises.writeFile(speechFile, buffer);
+  res.send("ok");
+}
+
 app.post("/openai", generateText);
 app.post("/prueba", prueba);
+
+app.post("/speech", textToSpeech);
+

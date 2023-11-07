@@ -30,6 +30,10 @@
         <div *ngIf="conversation.answer" class="answer">
           <p [innerHTML]="conversation.answer"></p>
         </div>
+        <div *ngIf="conversation.waiting" class="waiting">
+          <div class="spinner"></div>
+        </div>
+
       </div>
     </div>
     <div class="infoContainer">
@@ -39,13 +43,13 @@
     </div>
     
     <div class="input-container">
-      <!-- <textarea class="textInput" placeholder="Send a message" [(ngModel)]="inputText"></textarea> -->
-      <div  contenteditable="plaintext-only"  class="input-div" [(ngModel)]="inputText"  #editableDiv (input)="onInput($event)"></div>
-      <span class="placeholder-text">Escribe aquí...</span>
-      <button class="input-button">
+      <div class="input-div">
+        <textarea class="textInput" id="textInput" placeholder="Send a message" [(ngModel)]="inputText" (input)="autoAdjustTextArea($event)" (keydown)="onKeyDown($event)"></textarea>
+      </div>
+      <button class="input-button" [disabled]="inputText.length >= 1">
         <img [src]="'../../../assets/micButton.svg'" alt="SVG Button" />
       </button>
-      <button class="input-button" (click)="sendQuest()">
+      <button class="input-button" (click)="sendQuest()" [disabled]="inputText.length <= 1">
         <img [src]="'../../../assets/sendButton.svg'" alt="SVG Button" />
       </button>
     </div>
