@@ -29,6 +29,14 @@
         </div>
         <div *ngIf="conversation.answer" class="answer">
           <p [innerHTML]="conversation.answer"></p>
+          <div class="buttons">
+            <button class="custom-button" (click)="copyText(conversation.answer)">
+              <img [src]="'../../../assets/copyButton.svg'" alt="SVG Button" />
+            </button>
+            <button class="custom-button" (click)="repVoice(conversation.answer)">
+              <img [src]="'../../../assets/voiceButton.svg'" alt="SVG Button"/>
+            </button>
+          </div>
         </div>
         <div *ngIf="conversation.waiting" class="waiting">
           <div class="spinner"></div>

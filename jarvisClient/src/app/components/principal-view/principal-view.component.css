@@ -253,7 +253,7 @@ option:checked {
 
 .waiting{
   z-index: 3;
-  background-color:  #016fb93b;
+  background-color:  transparent; 
   width:fit-content;
   height: 100%;
   word-wrap:break-word;
@@ -353,19 +353,6 @@ option:checked {
 
 
 
-.input-button{
-
-  display: flex;
-  border: none;
-  max-width: 3%;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  max-height: 20px;
-  height: 100%;
-  opacity: 0.5;
-  border: 1px solid red;
-}
 
 .input-button img{
 
@@ -482,3 +469,26 @@ option:checked {
   opacity: 0.5;
 }
 
+
+.buttons{
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.custom-button{
+  
+  display: flex;
+  border: none;
+  background-color: transparent;
+  max-height: 20px;
+  height: 100%;
+  opacity: 0.5;
+  padding: 5px;
+  align-items: center;
+}
+
+.custom-button:hover{
+  background-color: transparent;
+  opacity: 1;
+}

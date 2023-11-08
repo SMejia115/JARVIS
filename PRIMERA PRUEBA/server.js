@@ -87,13 +87,18 @@ const textToSpeech = async (req, res) => {
   console.log(text);
   const voice = await openai.audio.speech.create({
     model: "tts-1",
-    voice: "onyx",
+    voice: "echo",
     input: text,
   });
   console.log(speechFile);
   const buffer = Buffer.from(await voice.arrayBuffer());
   await fs.promises.writeFile(speechFile, buffer);
-  res.send("ok");
+  // res.sendFile(speechFile);
+  res.setHeader('Content-Type', 'audio/mpeg');
+  res.setHeader('Content-Disposition', 'attachment; filename="speech.mp3"');
+
+  res.send(buffer); 
+  
 }
 
 app.post("/openai", generateText);

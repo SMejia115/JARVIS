@@ -2,7 +2,8 @@ import { Component, ViewChild, ElementRef  } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import hljs from 'highlight.js';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
+import { SecurityContext } from '@angular/core';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-principal-view',
@@ -19,7 +20,7 @@ export class PrincipalViewComponent {
   waiting = false;
 
 
-  constructor(private http:HttpClient, private sanitizer: DomSanitizer) { 
+  constructor(private http:HttpClient, private sanitizer: DomSanitizer, private clipboard: Clipboard) { 
   }
 
   sendQuest() {
@@ -89,13 +90,29 @@ export class PrincipalViewComponent {
       event.preventDefault(); // Evita el salto de línea en el textarea
       this.sendQuest(); // Llama a tu función para enviar el mensaje
     }
-
-
-
   }
 
-  
-  
-}
+  repVoice(text: SafeHtml){
+    const textoPlano = this.sanitizer.sanitize(SecurityContext.HTML, text);
+    const textoLegible = textoPlano?.replace(/&nbsp;/g, ' ')
+    console.log(textoLegible);
 
+    this.http.post('http://localhost:5500/speech', { text: textoLegible }, { responseType: 'blob' }).subscribe((data: Blob) => {
+      const audioBlob = new Blob([data], { type: 'audio/mpeg' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+  
+      const audio = new Audio(audioUrl);
+      audio.play();
+    });
+  }
 
+  copyText(text: SafeHtml){
+    const textoPlano = this.sanitizer.sanitize(SecurityContext.HTML, text);
+    const textoLegible: any = textoPlano?.replace(/&nbsp;/g, ' ')
+    if (this.clipboard.copy(textoLegible)) {
+      console.log('Texto copiado al portapapeles: ', textoLegible);
+    } else {
+      console.error('Error al copiar el texto al portapapeles');
+    }
+  } 
+}  
