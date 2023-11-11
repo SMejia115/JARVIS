@@ -204,7 +204,7 @@ option:checked {
   height: 90%;
   right: 0;
   overflow: auto;
-  padding-bottom: 60px;
+  padding-bottom: 59px;
   
 }
 
@@ -491,4 +491,36 @@ option:checked {
 .custom-button:hover{
   background-color: transparent;
   opacity: 1;
+}
+
+/*---------------------------------*/
+.bars {
+  width: 21.6px;
+  height: 28.8px;
+  --c: linear-gradient(#000814  0 0);
+  background: var(--c) 0%   50%,
+         var(--c) 50%  50%,
+         var(--c) 100% 50%;
+  background-size: 4.3px 50%;
+  background-repeat: no-repeat;
+  animation: bars-7s9ul0mn 1s infinite linear alternate;
+  margin-right: 10px;
+}
+
+@keyframes bars-7s9ul0mn {
+  20% {
+     background-size: 4.3px 20% ,4.3px 50% ,4.3px 50%;
+  }
+
+  40% {
+     background-size: 4.3px 100%,4.3px 20% ,4.3px 50%;
+  }
+
+  60% {
+     background-size: 4.3px 50% ,4.3px 100%,4.3px 20%;
+  }
+
+  80% {
+     background-size: 4.3px 50% ,4.3px 50% ,4.3px 100%;
+  }
 }

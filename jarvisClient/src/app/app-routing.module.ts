@@ -5,7 +5,7 @@ import { PrincipalViewComponent } from './components/principal-view/principal-vi
 
 const routes: Routes = [
   { path: 'chat', component: PrincipalViewComponent },
-  { path: '', redirectTo: '/principal-view', pathMatch: 'full' }
+  // { path: '', redirectTo: '/principal-view', pathMatch: 'full' }
 ];
 
 @NgModule({

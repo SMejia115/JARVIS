@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef  } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone  } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import hljs from 'highlight.js';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -18,9 +18,16 @@ export class PrincipalViewComponent {
   quests:any = []  // Array de objetos
   conversations: any[] = [];
   waiting = false;
+  record: boolean = false;
+  recognition: any;
+  // speechRecognition: SpeechRecognition;
 
 
-  constructor(private http:HttpClient, private sanitizer: DomSanitizer, private clipboard: Clipboard) { 
+  constructor(private http:HttpClient, private sanitizer: DomSanitizer, private clipboard: Clipboard, private zone: NgZone) {
+    this.recognition = new (<any>window).webkitSpeechRecognition();
+    this.recognition.lang = 'es-ES';
+    this.recognition.continuous = true;
+    this.recognition.interimResults = false;
   }
 
   sendQuest() {
@@ -49,13 +56,7 @@ export class PrincipalViewComponent {
        
     }, (error) => {
       console.log(error);
-    });
-     // El subscribe es para que se ejecute la petición
-      // Comprueba que el valor de inputText sea realmente una cadena vacía
-
-
-    // Además, restablece el contenido del div a una cadena vacía
-     
+    });  
   }
 
 
@@ -115,4 +116,22 @@ export class PrincipalViewComponent {
       console.error('Error al copiar el texto al portapapeles');
     }
   } 
+  
+  recMic(){
+    this.record = true;
+    this.recognition.start();
+    this.recognition.onresult = (event: any) => {
+      const texto = event.results[0][0].transcript;
+      console.log(texto);
+      this.inputText += texto;
+    }
+  }
+    
+  
+  stopRecord(){
+    console.log("Detuvo la grabación");
+    this.inputText += '.';
+    this.record = false;
+    this.recognition.stop()
+  }
 }  

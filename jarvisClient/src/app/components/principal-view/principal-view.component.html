@@ -54,11 +54,17 @@
       <div class="input-div">
         <textarea class="textInput" id="textInput" placeholder="Send a message" [(ngModel)]="inputText" (input)="autoAdjustTextArea($event)" (keydown)="onKeyDown($event)"></textarea>
       </div>
-      <button class="input-button" [disabled]="inputText.length >= 1">
+      <button class="input-button"  (click)="recMic()" *ngIf="!record">
         <img [src]="'../../../assets/micButton.svg'" alt="SVG Button" />
       </button>
-      <button class="input-button" (click)="sendQuest()" [disabled]="inputText.length <= 1">
+      <button class="input-button" (click)="sendQuest()"  [disabled]="inputText.length <= 1" *ngIf="!record">
         <img [src]="'../../../assets/sendButton.svg'" alt="SVG Button" />
+      </button>
+
+      <div class="bars" *ngIf="record" ></div>
+
+      <button class="input-button"  (click)="stopRecord()" *ngIf="record">
+        <img [src]="'../../../assets/stopButton.svg'">
       </button>
     </div>
     
