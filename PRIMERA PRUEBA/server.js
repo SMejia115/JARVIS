@@ -101,8 +101,20 @@ const textToSpeech = async (req, res) => {
   
 }
 
+
+// image generation
+ 
+const imageGeneration = async (req, res) => {
+  const prompt = req.body.prompt;  
+  const image = await openai.images.generate({ 
+    model: "dall-e-3", 
+    prompt: prompt});
+  res.send(image.data.url);
+  console.log(image.data); 
+}
+
 app.post("/openai", generateText);
 app.post("/prueba", prueba);
-
+app.post("/image", imageGeneration);
 app.post("/speech", textToSpeech);
 

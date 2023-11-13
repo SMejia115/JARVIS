@@ -23,11 +23,12 @@ export class PrincipalViewComponent {
   // speechRecognition: SpeechRecognition;
 
 
-  constructor(private http:HttpClient, private sanitizer: DomSanitizer, private clipboard: Clipboard, private zone: NgZone) {
-    this.recognition = new (<any>window).webkitSpeechRecognition();
-    this.recognition.lang = 'es-ES';
-    this.recognition.continuous = true;
-    this.recognition.interimResults = false;
+  constructor(private http:HttpClient, private sanitizer: DomSanitizer, private clipboard: Clipboard) {
+    // this.recognition = new (<any>window).webkitSpeechRecognition();
+    // this.recognition.lang = 'es-ES';
+    // this.recognition.continuous = true;
+    // this.recognition.interimResults = false;
+    // this.recognition = new (<any>window).webkitSpeechRecognition();
   }
 
   sendQuest() {
@@ -118,20 +119,39 @@ export class PrincipalViewComponent {
   } 
   
   recMic(){
-    this.record = true;
-    this.recognition.start();
-    this.recognition.onresult = (event: any) => {
-      const texto = event.results[0][0].transcript;
-      console.log(texto);
-      this.inputText += texto;
-    }
+    const chunks: any = [];
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      const mediaRecorder = new MediaRecorder(stream);
+
+      console.log(mediaRecorder.state);
+      console.log(mediaRecorder);
+      console.log("recorder started");
+      
+      mediaRecorder.ondataavailable = function(e) {
+        console.log("data available");
+        console.log(e.data);
+        chunks.push(e.data);
+      }
+
+      mediaRecorder.onstop = function() {
+        console.log("recording stopped");
+        // Aquí puedes procesar los datos almacenados en 'chunks'
+        const blob = new Blob(chunks, { type: 'audio/wav' });
+        // blob es el archivo de audio que puedes enviar a tu API o manipular
+      }
+
+      mediaRecorder.start();
+
+      // Suponiendo que deseas que la grabación dure un tiempo determinado
+      setTimeout(() => {
+        mediaRecorder.stop();
+      }, 5000); // Detiene la grabación después de 5 segundos (5000 ms)
+    });
   }
     
   
   stopRecord(){
-    console.log("Detuvo la grabación");
-    this.inputText += '.';
     this.record = false;
-    this.recognition.stop()
   }
 }  
