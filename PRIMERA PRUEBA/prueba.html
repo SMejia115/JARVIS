@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chunked Response Demo</title>
+</head>
+<body>
+  <div id="response-container"></div>
+
+  <script>
+    const responseContainer = document.getElementById('response-container');
+
+    // Realizar la solicitud al servidor
+    fetch('http://localhost:5500/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages: [{"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Quién descubrió América?"}], // tus mensajes
+        model: 'gpt-3.5-turbo',
+        // otras opciones
+      }),
+    })
+    .then(response => {
+      const reader = response.body.getReader();
+
+      // Utilizar TextDecoder para convertir los bytes a texto
+      const textDecoder = new TextDecoder();
+
+      // Leer chunks de la respuesta
+      return new ReadableStream({
+        async start(controller) {
+          while (true) {
+            const { done, value } = await reader.read();
+
+            // Finalizar la lectura si se ha completado
+            if (done) {
+              controller.close();
+              break;
+            }
+
+            // Convertir los bytes a texto
+            const textContent = textDecoder.decode(value);
+
+            // Mostrar el texto en el contenedor
+            responseContainer.innerHTML += textContent;
+
+            // Mostrar el chunk en la consola
+            console.log('Received chunk:', textContent);
+          }
+        }
+      });
+    })
+    .then(stream => {
+      // Crear un objeto Response a partir de la ReadableStream
+      return new Response(stream, { headers: { 'Content-Type': 'text/html' } });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  </script>
+</body>
+</html>

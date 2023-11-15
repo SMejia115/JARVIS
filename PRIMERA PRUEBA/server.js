@@ -113,8 +113,42 @@ const imageGeneration = async (req, res) => {
   console.log(image.data); 
 }
 
+// chat handler
+
+const chatHandler = async (req, res) => {
+  const messages = req.body.messages;
+  const model = req.body.model;
+  const temperature = req.body.temperature;
+  const max_tokens = req.body.max_tokens;
+
+  // Configurar encabezados para la transferencia de chunks
+  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Transfer-Encoding', 'chunked');
+  res.setHeader('Connection', 'keep-alive');
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: messages,
+    // temperature: temperature,
+    // max_tokens: max_tokens,
+    stream:true,
+  });
+  for await (const chunk of completion) {
+    const responsePart = chunk.choices[0]?.delta?.content?.toString() || '';
+    // Verificar si responsePart está definido antes de enviarlo
+    if (responsePart !== undefined) {
+      console.log('Sending chunk:', responsePart);
+      res.write(responsePart);
+    }
+  }
+  res.end();
+}
+
+
+
 app.post("/openai", generateText);
 app.post("/prueba", prueba);
 app.post("/image", imageGeneration);
 app.post("/speech", textToSpeech);
+app.post("/chat", chatHandler);
 
