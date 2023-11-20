@@ -13,7 +13,7 @@ const app = express();
 const port = 5500;
 
 
-// Middlewares
+// Middlewares 
 app.use(express.json());
 app.use(cors());
 dotenv.config();
@@ -117,9 +117,9 @@ const imageGeneration = async (req, res) => {
 
 const chatHandler = async (req, res) => {
   const messages = req.body.messages;
-  const model = req.body.model;
-  const temperature = req.body.temperature;
-  const max_tokens = req.body.max_tokens;
+  // const model = req.body.model;
+  // const temperature = req.body.temperature;
+  // const max_tokens = req.body.max_tokens;
 
   // Configurar encabezados para la transferencia de chunks
   res.setHeader('Content-Type', 'text/html');
@@ -129,16 +129,18 @@ const chatHandler = async (req, res) => {
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: messages,
-    // temperature: temperature,
-    // max_tokens: max_tokens,
     stream:true,
-  });
+  }); 
   for await (const chunk of completion) {
-    const responsePart = chunk.choices[0]?.delta?.content?.toString() || '';
-    // Verificar si responsePart está definido antes de enviarlo
-    if (responsePart !== undefined) {
-      console.log('Sending chunk:', responsePart);
-      res.write(responsePart);
+    if (chunk.choices[0].finish_reason === 'stop') {
+      console.log('Chat complete');
+      break;
+    }
+    const responsePart = chunk.choices[0].delta.content;
+    console.log(chunk.choices[0].delta);
+    if (responsePart !== undefined) { 
+      // console.log('Sending chunk:', responsePart);
+      res.write(responsePart); 
     }
   }
   res.end();

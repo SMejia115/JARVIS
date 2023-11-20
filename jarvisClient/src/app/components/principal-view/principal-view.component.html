@@ -23,6 +23,27 @@
   </div>
   <div class="mainChatContainer">
     <div class="chat-container">
+      <div *ngFor="let message of messages" class="message">
+        <div *ngIf="message.role=='user'" class="quest">
+          <p [innerHTML]="message.content"></p>
+        </div>
+        <div *ngIf="message.role=='system'" class="answer">
+          <p [innerHTML]="message.content"></p>
+          <div class="buttons">
+            <button class="custom-button" (click)="copyText(message.content)">
+              <img [src]="'../../../assets/copyButton.svg'" alt="SVG Button" />
+            </button>
+            <button class="custom-button" (click)="repVoice(message.content)">
+              <img [src]="'../../../assets/voiceButton.svg'" alt="SVG Button"/>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="waiting" class="waiting">
+        <div class="spinner"></div>
+      </div>
+      
+
       <div *ngFor="let conversation of conversations" class="message">
         <div *ngIf="conversation.quest" class="quest">
           <p [innerHTML]="conversation.quest"></p>

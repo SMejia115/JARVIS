@@ -252,10 +252,10 @@ option:checked {
 }
 
 .waiting{
-  z-index: 3;
-  background-color:  transparent; 
+  z-index: 5;
+  background-color:  #016fb93b; 
   width:fit-content;
-  height: 100%;
+  height: min-content;
   word-wrap:break-word;
   font-size: 16px;
   color:white;
