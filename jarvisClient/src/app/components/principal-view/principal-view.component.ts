@@ -43,17 +43,20 @@ export class PrincipalViewComponent {
 
     const header: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
+    console.log(this.messages);
+
     this.http.post('http://localhost:5500/chat', { messages: this.messages }, { responseType: 'text' }).subscribe(
     (data: any) => {
       console.log(data.replace(/\n/g, '<br>'))
       this.waiting = false;
       let  formattedText = this.formatText(data);
       let answer = this.sanitizer.bypassSecurityTrustHtml(formattedText.replace(/(\r\n|\n|\r)/g, '<br>$1').replace(/ /g, '&nbsp;'));
-      this.messages.push({ role:'system', content: answer})
+      this.messages.push({ role:'system', content: data})
+      console.log(this.messages);
       // Aquí puedes manejar la respuesta según tus necesidades
     },
     (error: any) => {
-      console.error('Error en la solicitud:', error);
+      console.error('Error en la solicitud:', error); 
 
       // Aquí puedes manejar el error según tus necesidades
     });

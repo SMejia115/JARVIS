@@ -71,16 +71,16 @@ const prueba = async (req, res) => {
     messages: [{ role: "system", content: "Eres un asistente virtual llamado Jarvis que puede responder cualquier pregunta. Tu creador es Santiago Mejía, un estudiante de Ingeniería en Sistemas y Computación en la UTP. Eres colombiano." }, 
     { role: "user", content: prompt }],
     temperature: temperature,
-    max_tokens: max_tokens,
+    max_tokens: max_tokens,  
   });
-  
-  res.json(response.choices[0].message.content); 
+   
+  res.json(response.choices[0].message.content);  
  
 }
+ 
+// text to speech 
 
-// text to speech
-
-const speechFile = path.resolve("./speech.mp3");
+const speechFile = path.resolve("./speech.mp3"); 
 
 const textToSpeech = async (req, res) => {
   const text = req.body.text;
