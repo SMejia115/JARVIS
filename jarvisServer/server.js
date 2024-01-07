@@ -58,7 +58,7 @@ const generateText = async (req, res) => {
 
 }
 
-
+// ------------------- Prueba ------------------- //
 
 const prueba = async (req, res) => {
   const prompt = req.body.prompt;
@@ -78,7 +78,7 @@ const prueba = async (req, res) => {
  
 }
  
-// text to speech 
+// ------------------- Text to Speech ------------------- //
 
 const speechFile = path.resolve("./speech.mp3"); 
 
@@ -101,9 +101,8 @@ const textToSpeech = async (req, res) => {
   
 }
 
-
+// ------------------- Image Generation ------------------- //
 // image generation
- 
 const imageGeneration = async (req, res) => {
   const prompt = req.body.prompt;  
   const image = await openai.images.generate({ 
@@ -113,6 +112,9 @@ const imageGeneration = async (req, res) => {
   console.log(image.data); 
 }
 
+
+
+// ------------------- Chat Handler ------------------- //
 // chat handler
 
 const chatHandler = async (req, res) => {

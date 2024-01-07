@@ -12,15 +12,6 @@ app.get('/', (req, res) => {
 });
 
 
-const response = await openai.chat.completions.create({
-  model: "gpt-3.5-turbo",
-  messages: [
-    { role: "system", content: "Tú eres un asistente virtual que ayuda a hacer reservas de hotel." },
-    { role: "user", content: "Quiero reservar una habitación de hotel en Nueva York." }
-  ],
-  temperature: 0,
-  max_tokens: 1024,
-});
 
 
 const chatHandler = async (req, res) => {
