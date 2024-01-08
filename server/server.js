@@ -112,6 +112,10 @@ const imageGeneration = async (req, res) => {
   console.log(image.data); 
 }
 
+// ------------------- Name Response Function ------------------- //
+function nameResponse () {
+  return "Hola, mi nombre es Jarvis, ¿en qué puedo ayudarte? 123123";
+}
 
 
 // ------------------- Chat Handler ------------------- //
@@ -131,21 +135,37 @@ const chatHandler = async (req, res) => {
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: messages,
-    stream:true,
+    tools: [
+      {
+        type: 'function',
+        function: {
+          name: "nameResponse",
+          description: "Get your name and your creator name",
+          parameters: {},
+        }
+      }
+    ],
+    tool_choice: "auto",
+    // stream: true,
   }); 
-  for await (const chunk of completion) {
-    if (chunk.choices[0].finish_reason === 'stop') {
-      console.log('Chat complete');
-      break;
-    }
-    const responsePart = chunk.choices[0].delta.content;
-    console.log(chunk.choices[0].delta);
-    if (responsePart !== undefined) { 
-      // console.log('Sending chunk:', responsePart);
-      res.write(responsePart); 
-    }
+  if completion.choices[0].finish_reason === 'stop' {
+    console.log('Chat complete');
+    break;
   }
-  res.end();
+  console.log(completion.choices[0].message);
+  // for await (const chunk of completion) {
+  //   if (chunk.choices[0].finish_reason === 'stop') {
+  //     console.log('Chat complete');
+  //     break;
+  //   }
+  //   const responsePart = chunk.choices[0].delta.content;
+  //   console.log(chunk.choices[0].delta);
+  //   if (responsePart !== undefined) {  
+  //     // console.log('Sending chunk:', responsePart);
+  //     res.write(responsePart); 
+  //   }
+  // }
+  // res.end();
 }
 
 
