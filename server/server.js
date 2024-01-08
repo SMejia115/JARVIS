@@ -17,7 +17,7 @@ const port = 5500;
 app.use(express.json());
 app.use(cors());
 dotenv.config();
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); 
 app.use(morgan("dev"));
 
 
@@ -123,9 +123,10 @@ function nameResponse () {
 
 const chatHandler = async (req, res) => {
   const messages = req.body.messages;
-  // const model = req.body.model;
-  // const temperature = req.body.temperature;
-  // const max_tokens = req.body.max_tokens;
+  const model = req.body.model;
+  const temperature = req.body.temperature;
+  const max_tokens = req.body.max_tokens;
+  
 
   // Configurar encabezados para la transferencia de chunks
   res.setHeader('Content-Type', 'text/html');
@@ -133,8 +134,10 @@ const chatHandler = async (req, res) => {
   res.setHeader('Connection', 'keep-alive');
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: model,
     messages: messages,
+    temperature: temperature,
+    max_tokens: max_tokens,
     tools: [
       {
         type: 'function',
@@ -146,20 +149,26 @@ const chatHandler = async (req, res) => {
       }
     ],
     tool_choice: "auto",
-    // stream: true,
   }); 
-  if completion.choices[0].finish_reason === 'stop' {
-    console.log('Chat complete');
-    break;
+  if (completion.choices[0].finish_reason == 'stop') {
+    res.send(completion.choices[0].message.content);
   }
-  console.log(completion.choices[0].message);
+  else if (completion.choices[0].finish_reason === 'tool_calls') {
+    const function_name = completion.choices[0].message.tool_calls[0].function.name;
+    if (function_name === "nameResponse") {
+      const response = nameResponse();
+      console.log(response);
+      res.send(response);
+    }
+  }
+  
   // for await (const chunk of completion) {
   //   if (chunk.choices[0].finish_reason === 'stop') {
   //     console.log('Chat complete');
   //     break;
   //   }
   //   const responsePart = chunk.choices[0].delta.content;
-  //   console.log(chunk.choices[0].delta);
+  //   console.log(chunk.choices[0].delta); 
   //   if (responsePart !== undefined) {  
   //     // console.log('Sending chunk:', responsePart);
   //     res.write(responsePart); 

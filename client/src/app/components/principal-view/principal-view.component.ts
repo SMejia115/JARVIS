@@ -14,8 +14,8 @@ import { catchError, tap } from 'rxjs/operators';
   styleUrls: ['./principal-view.component.css']
 })
 export class PrincipalViewComponent {
-  temperature = 0;
-  maxLength = 1;
+  temperature = 1;
+  maxLength = 500;
   model = "gpt-3.5-turbo";
   inputText = "";
   quests:any = []  // Array de objetos
@@ -45,7 +45,7 @@ export class PrincipalViewComponent {
 
     console.log(this.messages);
 
-    this.http.post('http://localhost:5500/chat', { messages: this.messages }, { responseType: 'text' }).subscribe(
+    this.http.post('http://localhost:5500/chat', { messages: this.messages, model: this.model, temperature: this.temperature, max_tokens : this.maxLength }, { responseType: 'text' }).subscribe(
     (data: any) => {
       console.log(data.replace(/\n/g, '<br>'))
       this.waiting = false;
