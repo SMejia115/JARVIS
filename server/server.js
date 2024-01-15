@@ -113,8 +113,12 @@ const imageGeneration = async (req, res) => {
 }
 
 // ------------------- Name Response Function ------------------- //
-function nameResponse () {
-  return "Hola, mi nombre es Jarvis, ¿en qué puedo ayudarte? 123123";
+/**
+ * Retorna un saludo personalizado que incluye el nombre del asistente virtual.
+ * @returns {string} Saludo personalizado con el nombre del asistente virtual.
+ */
+function nameResponse() {
+  return "Hola, mi nombre es Jarvis, ¿en qué puedo ayudarte?";
 }
 
 
@@ -143,17 +147,15 @@ const chatHandler = async (req, res) => {
         type: 'function',
         function: {
           name: "nameResponse",
-          description: "Get your name and your creator name",
+          description: "Obtiene un saludo personalizado con el nombre del asistente virtual (Jarvis).",
           parameters: {},
         }
       }
     ],
     tool_choice: "auto",
   }); 
-  if (completion.choices[0].finish_reason == 'stop') {
-    res.send(completion.choices[0].message.content);
-  }
-  else if (completion.choices[0].finish_reason === 'tool_calls') {
+  console.log(completion.choices[0].message.content)
+  if (completion.choices[0].finish_reason === 'tool_calls') {
     const function_name = completion.choices[0].message.tool_calls[0].function.name;
     if (function_name === "nameResponse") {
       const response = nameResponse();
@@ -161,7 +163,10 @@ const chatHandler = async (req, res) => {
       res.send(response);
     }
   }
-  
+  else if (completion.choices[0].finish_reason == 'stop') {
+    res.send(completion.choices[0].message.content);
+
+  }
   // for await (const chunk of completion) {
   //   if (chunk.choices[0].finish_reason === 'stop') {
   //     console.log('Chat complete');
