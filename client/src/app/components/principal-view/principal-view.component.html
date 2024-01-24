@@ -10,6 +10,9 @@
         <option value="gpt-3.5-turbo-0613">gpt-3.5-turbo-0613</option>
       </select>
     </div>
+
+    <h3>Main Working!</h3>
+    <pre><code [highlight]="code" [lineNumbers]="true" (highlighted)="onHighlight($event)"></code></pre>
     
     <div class="temperatureContainer">
       <h3>Temperature: {{temperature}}</h3>

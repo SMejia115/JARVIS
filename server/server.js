@@ -118,7 +118,7 @@ const imageGeneration = async (req, res) => {
  * @returns {string} Saludo personalizado con el nombre del asistente virtual.
  */
 function nameResponse() {
-  return "Hola, mi nombre es Jarvis, ¿en qué puedo ayudarte?";
+  return "Hola, mi nombre es Jarvis, un asistente virtual desarrollado por SMejia115, ¿en qué puedo ayudarte?";
 }
 
 
@@ -136,6 +136,7 @@ const chatHandler = async (req, res) => {
   res.setHeader('Content-Type', 'text/html');
   res.setHeader('Transfer-Encoding', 'chunked');
   res.setHeader('Connection', 'keep-alive');
+  console.log(req.body.messages)
 
   const completion = await openai.chat.completions.create({
     model: model,
@@ -189,4 +190,5 @@ app.post("/prueba", prueba);
 app.post("/image", imageGeneration);
 app.post("/speech", textToSpeech);
 app.post("/chat", chatHandler);
+
 

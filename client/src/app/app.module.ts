@@ -9,7 +9,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSliderModule } from '@angular/material/slider';
 import { HttpClientModule } from '@angular/common/http';
 
+
+
 import { FormsModule } from '@angular/forms';
+
+import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+import { HighlightModule } from 'ngx-highlightjs';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,9 +27,18 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MatSliderModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    HighlightModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        fullLibraryLoader: () => import('highlight.js'),
+        lineNumbersLoader: () => import('ngx-highlightjs/line-numbers'), // Optional, only if you want the line numbers
+      },
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

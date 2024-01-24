@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, NgZone  } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone, OnInit } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders} from '@angular/common/http';
 import hljs from 'highlight.js';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -7,11 +7,19 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
+import {
+  HighlightAutoResult,
+  HighlightLoader,
+  HighlightModule,
+  HighlightOptions,
+  HIGHLIGHT_OPTIONS,
+} from 'ngx-highlightjs';
 
 @Component({
   selector: 'app-principal-view',
   templateUrl: './principal-view.component.html',
-  styleUrls: ['./principal-view.component.css']
+  styleUrls: ['./principal-view.component.css'],
+  
 })
 export class PrincipalViewComponent {
   temperature = 1;
@@ -22,12 +30,28 @@ export class PrincipalViewComponent {
   conversations: any[] = [];
   waiting = false;
   record: boolean = false;
-  recognition: any;
-  messages: any[] = [];
-  // speechRecognition: SpeechRecognition;
-
-
+  recognition: any; 
+  frontMessages: any[] = []; // Variable para almacenar los mensajes que se muestran en el front
+  messages: any[] = []; // Variable para almacenar los mensajes que se envían al servidor
+  code = `function myFunction() {
+    document.getElementById("demo1").innerHTML = "Test 1!";
+    document.getElementById("demo2").innerHTML = "Test 2!";
+  }`;
   constructor(private http:HttpClient, private sanitizer: DomSanitizer, private clipboard: Clipboard) {
+  }
+
+  onHighlight(e: HighlightAutoResult) {
+    const response = {
+      language: e.language,
+      relevance: e.relevance,
+      secondBest: '{...}',
+      value: '{...}',
+    };
+    console.log(response);
+  }
+
+  ngOnInit(): void {
+    console.log('Componente principal-view cargado');
   }
 
   /*---------------------------------------------------------------------------------------*/
@@ -51,7 +75,7 @@ export class PrincipalViewComponent {
       this.waiting = false;
       let  formattedText = this.formatText(data);
       let answer = this.sanitizer.bypassSecurityTrustHtml(formattedText.replace(/(\r\n|\n|\r)/g, '<br>$1').replace(/ /g, '&nbsp;'));
-      this.messages.push({ role:'system', content: data})
+      this.messages.push({ role:'system', content: answer})
       console.log(this.messages);
       // Aquí puedes manejar la respuesta según tus necesidades
     },
@@ -63,45 +87,11 @@ export class PrincipalViewComponent {
   }
 
   /*---------------------------------------------------------------------------------------*/
-  // INICIAL
-  // Función para enviar el mensaje al servidor y obtener la respuesta
-  sendQuest1() {
-    this.conversations.push({quest: this.inputText});
-    const textArea = document.getElementById('textInput') as HTMLTextAreaElement;
-    textArea.style.height = '20px'; // Ajustar la altura en función del contenido
-    const prompt = this.inputText;
-    this.waiting = true;
-    this.conversations.push({waiting: '.'});
-    this.inputText = '';
-    console.log("Entró a la petición");
-    this.http.post('http://localhost:5500/prueba', {prompt: prompt, 
-                                                    max_tokens: this.maxLength, 
-                                                    model: this.model, 
-                                                    temperature: this.temperature}).subscribe((data:any) => {
-     
-      
-      this.conversations.pop();
-      console.log(data.replace(/\n/g, '<br>'))
-      let  formattedText = this.formatText(data);
-      let answer = this.sanitizer.bypassSecurityTrustHtml(formattedText.replace(/(\r\n|\n|\r)/g, '<br>$1').replace(/ /g, '&nbsp;'));
-      this.conversations.push({ answer: answer})
-      
-      
-       
-    }, (error) => {
-      console.log(error);
-    });  
-  }
-
-
-  /*---------------------------------------------------------------------------------------*/
   // Función para formatear el texto
-
   formatText(text: string) {
     // Reemplaza las triple comillas por sus entidades HTML correspondientes
     return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
-
   /*---------------------------------------------------------------------------------------*/
   // Función para ajustar la altura del textarea según el texto ingresado
   autoAdjustTextArea(event: any) {
@@ -114,7 +104,6 @@ export class PrincipalViewComponent {
       textArea.style.height = '20px'; // Ajustar la altura en función del contenido
     }
   }
-
   /*---------------------------------------------------------------------------------------*/
   // Función para enviar el mensaje cuando se presiona la tecla Enter
   
@@ -149,7 +138,10 @@ export class PrincipalViewComponent {
   // Función para copiar el texto al portapapeles
 
   copyText(text: SafeHtml){
+    console.log(text);
     const textoPlano = this.sanitizer.sanitize(SecurityContext.HTML, text);
+    console.log(textoPlano);
+    console.log(this.messages)
     const textoLegible: any = textoPlano?.replace(/&nbsp;/g, ' ')
     if (this.clipboard.copy(textoLegible)) {
       console.log('Texto copiado al portapapeles: ', textoLegible);
@@ -158,7 +150,6 @@ export class PrincipalViewComponent {
     }
   } 
   
-
   /*---------------------------------------------------------------------------------------*/
   // EN DESARROLLO
   // Función para grabar audio
