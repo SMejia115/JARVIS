@@ -27,7 +27,7 @@ const openai = new OpenAI({
 
 
 // Routes
-
+ 
 app.get("/openai", (req,res) => {
   console.log(openai)
   res.send("Hello World");

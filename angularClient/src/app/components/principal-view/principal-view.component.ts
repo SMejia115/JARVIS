@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, NgZone, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone} from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders} from '@angular/common/http';
 import hljs from 'highlight.js';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -6,6 +6,7 @@ import { SecurityContext } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+
 
 import {
   HighlightAutoResult,
@@ -37,22 +38,54 @@ export class PrincipalViewComponent {
     document.getElementById("demo1").innerHTML = "Test 1!";
     document.getElementById("demo2").innerHTML = "Test 2!";
   }`;
+
+  bypassCondition = true;
+
   constructor(private http:HttpClient, private sanitizer: DomSanitizer, private clipboard: Clipboard) {
+    (this.sanitizer as any)._getSanitizationBypassAndMode = () => ({
+      bypass: true,
+      mode: SecurityContext.NONE,
+    });
   }
 
-  onHighlight(e: HighlightAutoResult) {
-    const response = {
-      language: e.language,
-      relevance: e.relevance,
-      secondBest: '{...}',
-      value: '{...}',
-    };
-    console.log(response);
+
+  highlightCode(text: string): string {
+    const bloquesCodigo: string[] = [];
+  
+    const bloques = text.split('```');
+    for (let i = 1; i < bloques.length; i += 2) {
+      const bloque = bloques[i];
+      const lines = bloque.split('\n');
+      
+      const lenguaje = lines[0].trim();
+      const codigo = lines.slice(1).join('\n');
+  
+      // Generar el fragmento HTML para el bloque de código
+      const codigoHTML = `<pre><code [highlight]="${this.escapeString(codigo)}" [languages]="['${lenguaje}']" [lineNumbers]="true"></code></pre>`;
+      bloquesCodigo.push(codigoHTML);
+    }
+  
+    // Unir los fragmentos HTML y el texto restante
+    let resultadoFinal = '';
+    for (let i = 0; i < bloques.length; i += 2) {
+      resultadoFinal += bloques[i];
+      if (i < bloques.length - 1) {
+        resultadoFinal += bloquesCodigo[i / 2];
+      }
+    }
+  
+    return resultadoFinal;
+  }
+  
+// Función para escapar caracteres especiales en una cadena
+  escapeString(text: string): string {
+    return text.replace(/"/g, '\\"');
+  } 
+
+  sanitizeHtml(html: string): SafeHtml {
+    return html as SafeHtml;
   }
 
-  ngOnInit(): void {
-    console.log('Componente principal-view cargado');
-  }
 
   /*---------------------------------------------------------------------------------------*/
   // EN DESARROLLO
@@ -71,11 +104,19 @@ export class PrincipalViewComponent {
 
     this.http.post('http://localhost:5500/chat', { messages: this.messages, model: this.model, temperature: this.temperature, max_tokens : this.maxLength }, { responseType: 'text' }).subscribe(
     (data: any) => {
+      console.log(data);
       console.log(data.replace(/\n/g, '<br>'))
       this.waiting = false;
       let  formattedText = this.formatText(data);
-      let answer = this.sanitizer.bypassSecurityTrustHtml(formattedText.replace(/(\r\n|\n|\r)/g, '<br>$1').replace(/ /g, '&nbsp;'));
-      this.messages.push({ role:'system', content: answer})
+      // let answer = this.sanitizer.bypassSecurityTrustHtml(formattedText.replace(/(\r\n|\n|\r)/g, '<br>$1').replace(/ /g, '&nbsp;'));
+      // this.messages.push({ role:'system', content: answer})
+      console.log(this.messages);
+      const prueba = this.highlightCode(data);
+      // const sanitizedPrueba = this.sanitizeHtml(prueba);
+      console.log("Prueba --> ", prueba);
+      // console.log("SanitizedPrueba --> ", sanitizedPrueba);
+      this.messages.push({ role:'system', content: prueba});
+      // this.messages.push({ role:'system', content: sanitizedPrueba});
       console.log(this.messages);
       // Aquí puedes manejar la respuesta según tus necesidades
     },

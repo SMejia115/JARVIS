@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, Sanitizer, SecurityContext } from '@angular/core';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,11 +15,20 @@ import { FormsModule } from '@angular/forms';
 
 import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { HighlightModule } from 'ngx-highlightjs';
+
+
+class NoopSanitizer implements Sanitizer {
+  sanitize(context: SecurityContext, value: any): string {
+    return value;
+  }
+}
+
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    PrincipalViewComponent
+    PrincipalViewComponent,
+    //SanitizerPipePipe
   ],
   imports: [
     BrowserModule,
@@ -31,6 +40,7 @@ import { HighlightModule } from 'ngx-highlightjs';
     HighlightModule
   ],
   providers: [
+    { provide: DomSanitizer, useClass: NoopSanitizer },
     {
       provide: HIGHLIGHT_OPTIONS,
       useValue: {
